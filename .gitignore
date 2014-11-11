@@ -1,0 +1,6 @@
+*.DS_Store
+js/app.js
+js/game.js
+js/config.js
+js/color1.js
+js/color2.js
