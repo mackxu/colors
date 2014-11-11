@@ -8,52 +8,63 @@
 </head>
 <body>
 <div class="container">
-	<div class="page" id="J_loading">
+	<div class="page loading" id="J_loading">
 		<div class="loading-text">加载中...</div>
 	</div>
 	<!-- // 加载中视图 -->
-	<div class="page" id="J_start">
-		<header>
-			<h1 class="page-title">看你有多色</h1>
-			<h3 class="page-subtitle">找出所有色块里颜色不同的一个</h3>
-		</header>
-		<div class="btns">
-			<a href="javascript:;" class="btn btn-play" data-mode="color1">普通模式</a>
-			<a href="javascript:;" class="btn btn-play btn-play-other" data-mode="color2">双飞模式</a>
-		</div>
-	</div>
-	<!-- // 游戏开始页 -->
-	<div class="page" id="J_room">
-		<aside>
-			<span class="lv">得分:<em>1</em></span>
-			<span class="time"></span>
-			<a href="javascript:;" class="btn btn-pause">暂停</a>
-		</aside>
-		<div class="lv1" id="J_grid"></div>
+	<div class="page start" id="J_start">
+    <header>
+        <h1 class="page-title">看你有多色</h1>
+        <h3 class="page-subtitle">找出所有色块里颜色不同的一个</h3>
+    </header>
+    <div class="btns btns-start">
+        <a href="javascript:;" class="btn btn-primary" data-mode="color1">普通模式</a>
+        <a href="javascript:;" class="btn btn-primary btn-play-other" data-mode="color2">双飞模式</a>
+    </div>
+  </div>
+  <!-- // 进入游戏界面 -->
+  <div class="page room" id="J_room">
+    <aside class="room-header">
+        <span class="score">得分:<em>1</em></span>
+        <span class="countdown warn">50</span>
+        <a href="javascript:;" class="btn btn-pause">暂停</a>
+    </aside>
+    <div class="full grid" id="J_grid">
+    	<span style="background: rgb(147, 142, 146);"></span>
+    	<span style="background: rgb(147, 142, 146);"></span>
+    	<span style="background: rgb(147, 142, 146);"></span>
+    	<span style="background: rgb(255, 255, 255)"></span>
+    </div>
 	</div>
 	<!-- // 游戏主舞台 -->
 	<div class="page" id="J_dialog">
-		<div class="content gameover">
-			<h3 class="level-text">Lv6色盲</h3>
-			<div class="btns">
-				<a href="javascript:;" class="btn btn-play" data-mode="color2">普通模式</a>
-				<a href="javascript:;" class="btn btn-restart">再来一局</a>
-			</div>
-			<a href="#">更多游戏</a>
-		</div>
-		<!-- // 游戏结束的对话框 -->
+    <div class="full content gameover">
+        <h3 class="level-text">Lv6色盲</h3>
+        
+        <div class="btns">
+            <div class="btn-wrap clearfix">
+        	<a href="javascript:;" class="btn btn-primary btn-restart" data-mode="color1">重来</a>
+          <a href="javascript:;" class="btn btn-primary" data-mode="color2">双飞</a>
+        </div>
+            <a href="javascript:;" class="btn btn-primary btn-other">更多游戏</a>
+        </div>
+        
+    </div>
+    <!-- // 游戏结束的对话框 -->
 	</div>
-	<div class="page" id="J_dialog">
-		<div class="content pause">
-			<div class="pause-title">游戏暂停</div>
-			<div class="btns">
-				<a href="javascript:;" class="btn btn-resume">继续</a>
-				<a href="javascript:;" class="btn btn-restart">重来</a>
-			</div>
-		</div>
-		<!-- // 暂停游戏的对话框 -->
+	<div class="page" id="J_dialog" style="display: none">
+    <div class="full content pause">
+        <h3 class="pause-title">游戏暂停</h3>
+        <div class="btns btns-pause">
+            <div class="btn-wrap clearfix">
+            	<a href="javascript:;" class="btn btn-primary btn-resume">继续</a>
+            	<a href="javascript:;" class="btn btn-primary btn-restart">重来</a>
+            </div>
+            <a href="javascript:;" class="btn btn-primary btn-other">更多游戏</a>
+        </div>
+    </div>
+    <!-- // 暂停游戏的对话框 -->
 	</div>
-	<!-- // 对话框 暂停或结束 -->
 </div>
   
 <script src="js/require.js" data-main="js/main"></script>
