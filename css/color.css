@@ -8,14 +8,16 @@ body {
 }
 .full { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
 .page { 
+    display: none;
     position: absolute; left: 0; right: 0; top: 0; bottom: 0;
     background-color: #F00056; 
 }
+.page-loading { display: block; }
 .loading-text { 
     position: absolute; left: 0; right: 0; top: 0; bottom: 100px; margin: auto;
     text-align: center; color: #FFF; font-size: 30px; height: 50px;
 }
-.start { text-align: center; }
+.page-index { text-align: center; }
 .page-title { font-size: 30px; padding: 30px 0; text-shadow: 1px 1px 1px #AB3C3C; }
 .page-subtitle { font-size: 16px; color: #FFA1A1;  }
 .btns { text-align: center; }
