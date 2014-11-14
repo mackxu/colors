@@ -8,7 +8,7 @@ define(['game'], (Game)->
 				loading: $('#J_loading')
 				index: $('#J_index')
 				room: $('#J_room')
-				dialog: $('#J_dialog')
+				btnModes: $('#J_modes')
 
 			this.initEvent();
 			this.loading();
@@ -21,12 +21,20 @@ define(['game'], (Game)->
 			# 隐藏加载页，显示游戏开始页面
 			self = this;
 			setTimeout( () ->
-				self.$el.loading[0].style.display = 'none'
-				self.$el.index[0].style.display = 'block'
+				self.$el.loading[0].style.display = 'none';
+				self.$el.index[0].style.display = 'block';
+				return;
 			, 1000);
 			return
 		initEvent: () ->
+			self = this
 			# 为页面绑定事件
+			this.$el.btnModes.on self.clickType, 'a', () ->
+				mode = this.getAttribute( 'data-mode' ) 
+				if mode
+					self.$el.index[0].style.display = 'none';
+					Game.init mode, self
+				return
 			return
 	return App;
 )

@@ -1,0 +1,2 @@
+define
+	target: 2
