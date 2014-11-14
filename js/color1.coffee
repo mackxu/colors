@@ -30,6 +30,7 @@ define () ->
 			Math.round Math.random() * temp
 			Math.round Math.random() * temp
 		]
+		# 需要确保和底色不一致才行
 		return "rgb(#{rgb.join()})"
 	getLvColor: () ->
 		# 根据制定的规则，返回干扰色
