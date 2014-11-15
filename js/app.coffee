@@ -1,10 +1,12 @@
 define(['game'], (Game)-> 
 
+	$el = null
+
 	App = 
 		clickType: if ('ontouchstart' of window) then 'touchend' else 'click'
 		init: () ->
 			# 获取dom节点，添加监听事件
-			this.$el = 
+			$el = 
 				loading: $('#J_loading')
 				index: $('#J_index')
 				room: $('#J_room')
@@ -19,20 +21,19 @@ define(['game'], (Game)->
 			return
 		render: () ->
 			# 隐藏加载页，显示游戏开始页面
-			self = this;
 			setTimeout( () ->
-				self.$el.loading[0].style.display = 'none';
-				self.$el.index[0].style.display = 'block';
+				$el.loading.hide()
+				$el.index.show()
 				return;
 			, 1000);
 			return
 		initEvent: () ->
 			self = this
 			# 为页面绑定事件
-			this.$el.btnModes.on self.clickType, 'a', () ->
+			$el.btnModes.on self.clickType, 'a', () ->
 				mode = this.getAttribute( 'data-mode' ) 
 				if mode
-					self.$el.index[0].style.display = 'none';
+					$el.index.hide()
 					Game.init mode, self
 				return
 			return

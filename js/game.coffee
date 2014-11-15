@@ -85,7 +85,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 	start: ( next ) ->
 		# 每一局都会执行
 		finded = 0
-		pause = false 				# 确保从restart后的倒计时是正常的
+		pause = false 			# 确保从restart后的倒计时是正常的
 		lv += 1
 		# 构建网格颜色块
 		this.createMap()
@@ -128,27 +128,31 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 				this.nextTv();
 		return
 	nextTv: () ->
-		currTime += Math.floor currMap / 3			# 每一局都会奖励时间
+		currTime += Math.floor currMap / 4			# 每一局奖励的时间
 		this.start true
 		return
 	tick: () ->
 		# 更新时间，提醒时间，判断是否结束
 		if pause is true
-			return			# 游戏暂停, 停止更新倒计时
+			return				# 游戏暂停, 停止更新倒计时
 		else 
 			currTime -= 1
-			currTime < 6 and $el.cdown.addClass 'warn'
+			# currTime < 6 and $el.cdown.addClass 'warn'
+			if currTime < 6
+				$el.cdown.addClass 'warn'
+			else
+				$el.cdown.removeClass 'warn'
 			if currTime < 0 then this.gameOver() else $el.cdown.text currTime
 		return
 	createMap: () ->
 		# 读取当前的map, 构建颜色块
 		currMap = lvMap[lv] or lvMap[lvMap.length - 1]
-		mapHTML = ('<span></span>' for i in [ 0 ... currMap * currMap ])
+		mapHTML = ('<span></span>' for i in [ 0 ... currMap * currMap ]).join('')
 		# 把构建好的结构插入到grid
-		# 需要移除之前的lv+n
-		$el.grid
-			.addClass('lv' + currMap)
-			.html( mapHTML.join('') )
+		# 需要移除之前的lv+n!!
+		# full grid 用于固定样式
+		$el.grid.attr( 'class', 'full grid lv' + currMap)
+			.html( mapHTML )
 		# 渲染颜色块 待优化该逻辑
 		this.Color.render currMap, lv, $el.grid.find('span') 
 		return  
