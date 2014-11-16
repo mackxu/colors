@@ -35,8 +35,9 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 			dialog: $('#J_dialog')
 			btnWrap: $('.btn-wrap')
 			_content: $( '.content' )
-			_gameover: $( '.gameover' )
+			dGameover: $( '.gameover' )
 			_pause: $( '.pause' )
+			dLvText: $( '.level-text' )
 
 		# 根据type的值，获取对应的config和api
 		this.Color = Colors[type]
@@ -151,10 +152,23 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		# 把构建好的结构插入到grid
 		# 需要移除之前的lv+n!!
 		# full grid 用于固定样式
+		# 由于游戏over时会隐藏grid，所以后面需要添加show()
 		$el.grid.attr( 'class', 'full grid lv' + currMap)
-			.html( mapHTML )
+			.html( mapHTML ).show();
 		# 渲染颜色块 待优化该逻辑
 		this.Color.render currMap, lv, $el.grid.find('span') 
 		return  
 	gameOver: () ->
+		# 取消现有定时器
+		clearTimer();
+		# 游戏的官封
+		textLv = this.Color.getTextLv lv
+		lvT = Conf.lv_txt
+		currLvT = lvT[textLv] or lvT[lvT.length - 1]
+		$el.dLvText.text 'lv' + lv + currLvT
+		$el.grid.fadeOut 1000, () ->
+			$el.dialog.show()
+			$el._content.hide()
+			$el.dGameover.show()
+			return
 		return

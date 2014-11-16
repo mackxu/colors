@@ -9,7 +9,7 @@ define () ->
 		size: 500
 		color1:
 			target: 1
-			allTime: 60
+			allTime: 20
 			addTime: 1
 			lvMap: [2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 9]
 		color2: 

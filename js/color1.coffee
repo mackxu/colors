@@ -38,5 +38,5 @@ define () ->
 			return value + d + 10
 
 		return "rgb(#{lvRgb.join()})"
-	getGameOverText: () ->
-		return
+	getTextLv: (lv) ->
+		if 20 > lv then 0 else Math.ceil (lv - 20) / 10 
