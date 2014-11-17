@@ -50,7 +50,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		this.reset();						# 重置一些参数
 		inited or this.initEvent();
 		inited = true
-		this.start();
+		this.build();
 		return
 	renderUI: () ->
 		# 制定颜色网格大小
@@ -83,7 +83,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		$(window).on 'resize', $.proxy(self.renderUI, self)
 
 		return
-	start: ( next ) ->
+	build: ( next ) ->
 		# 每一局都会执行
 		finded = 0
 		pause = false 			# 确保从restart后的倒计时是正常的
@@ -110,7 +110,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 	restart: () ->
 		clearTimer()			# 清除现有的定时器
 		this.reset()			# 重置参数
-		this.start()			# 新的征程开始吧
+		this.build()			# 新的征程开始吧
 		$el.dialog.hide()
 		return
 	reset: () ->
@@ -129,8 +129,8 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 				this.nextTv();
 		return
 	nextTv: () ->
-		currTime += Math.floor currMap / 4			# 每一局奖励的时间
-		this.start true
+		currTime += 1 if lvMap > 8 
+		this.build true
 		return
 	tick: () ->
 		# 更新时间，提醒时间，判断是否结束
@@ -165,7 +165,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		textLv = this.Color.getTextLv lv
 		lvT = Conf.lv_txt
 		currLvT = lvT[textLv] or lvT[lvT.length - 1]
-		$el.dLvText.text 'lv' + lv + currLvT
+		$el.dLvText.text 'Lv' + lv + currLvT
 		$el.grid.fadeOut 1000, () ->
 			$el.dialog.show()
 			$el._content.hide()
