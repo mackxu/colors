@@ -6,8 +6,9 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 
 	timerID = null			# 倒计时id
 	pause = false			# 游戏暂停
-	lv = -1 				# 游戏局数
+	lv = 0 					# 游戏局数
 	lvMap = null			# 游戏的所有地图 每个模式不同
+	colorConf = null
 	currMap = 0				# 当前使用的地图行数 [ 多处计算用到该值 ]
 	finded = 0				# 本局找到的目标的颜色个数
 	target = 0				# 该模式的目标颜色个数
@@ -34,16 +35,16 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 			cdown: $('#J_cdown')
 			dialog: $('#J_dialog')
 			btnWrap: $('.btn-wrap')
-			_content: $( '.content' )
+			dContent: $( '.content' )
 			dGameover: $( '.gameover' )
-			_pause: $( '.pause' )
+			dPause: $( '.pause' )
 			dLvText: $( '.level-text' )
 
 		# 根据type的值，获取对应的config和api
 		this.Color = Colors[type]
-		this.mode = Conf[type]
-		target = this.mode.target
-		lvMap = this.mode.lvMap
+		colorConf = Conf[type]
+		target = colorConf.target
+		lvMap = colorConf.lvMap
 		this.App = App;
 
 		this.renderUI();
@@ -86,8 +87,6 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 	build: ( next ) ->
 		# 每一局都会执行
 		finded = 0
-		pause = false 			# 确保从restart后的倒计时是正常的
-		lv += 1
 		# 构建网格颜色块
 		this.createMap()
 		# 更新得分
@@ -100,8 +99,8 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 	pause: () ->
 		pause = true
 		$el.dialog.show()
-		$el._content.hide()
-		$el._pause.show()
+		$el.dContent.hide()
+		$el.dPause.show()
 		return
 	resume: () ->
 		pause = false
@@ -109,27 +108,33 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		return
 	restart: () ->
 		clearTimer()			# 清除现有的定时器
+		pause = false
 		this.reset()			# 重置参数
 		this.build()			# 新的征程开始吧
 		$el.dialog.hide()
 		return
 	reset: () ->
 		# 重置倒计时数
-		currTime = this.mode.allTime
+		currTime = colorConf.allTime
 		# 当前得分
 		score = 0
 		# 当前的局数
-		lv = -1
+		lv = 0
 		return
 	selectColor: (e) ->
-		if $.data(e.target, 'target')
+		if $.data(e.target, 'target') is true
 			finded += 1
 			score += Math.round currMap / 2
-			if finded is target						# 判断是否可以进入下一局
-				this.nextTv();
+			# 判断是否可以进入下一局
+			this.nextTv() if finded is target
+		else
+			# 如果选中失败
+			currTime -= 1 
 		return
 	nextTv: () ->
-		currTime += 1 if lvMap > 8 
+		lv += 1
+		# 有限制条件的奖励时间 1 或 2
+		currTime += Math.ceil Math.random() * 2 if currMap > 8 
 		this.build true
 		return
 	tick: () ->
@@ -156,7 +161,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		$el.grid.attr( 'class', 'full grid lv' + currMap)
 			.html( mapHTML ).show();
 		# 渲染颜色块 待优化该逻辑
-		this.Color.render currMap, lv, $el.grid.find('span') 
+		this.Color.init currMap, lv, $el.grid.find('span') 
 		return  
 	gameOver: () ->
 		# 取消现有定时器
@@ -168,7 +173,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		$el.dLvText.text 'Lv' + lv + currLvT
 		$el.grid.fadeOut 1000, () ->
 			$el.dialog.show()
-			$el._content.hide()
+			$el.dContent.hide()
 			$el.dGameover.show()
 			return
 		return

@@ -14,6 +14,6 @@ define () ->
 			lvMap: [2, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 9]
 		color2: 
 			target: 2
-			allTime: 1200
+			allTime: 60
 			addTime: 3
 			lvMap: [4, 4, 6, 6, 6, 6, 6, 6, 8] 
