@@ -122,9 +122,11 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		lv = 0
 		return
 	selectColor: (e) ->
-		if $.data(e.target, 'target') is true
+		block = e.target
+		if $.data(block, 'target') is true
 			finded += 1
 			score += Math.round currMap / 2
+			block.className = 'checked'
 			# 判断是否可以进入下一局
 			this.nextTv() if finded is target
 		else

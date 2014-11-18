@@ -47,13 +47,14 @@ body {
 }
 @media (orientation: landscape) {
     .room-header { bottom: 10px; left: 10px;  width: 80px; line-height: inherit; }
-    .score { top: auto; bottom: 0; }
+    .score { top: auto; bottom: 0; left: 0; }
     .countdown { position: absolute; top: 50%; left: 0; transform: translateY(-50%); }
     .btn-pause { right: auto; top: 0;  left: 0; }
 }
 
 .grid { margin: auto; padding: 5px; background-color: #ddd; border-radius: 10px; }
 .grid span { box-sizing: border-box; float: left; border-radius: 10px; border: 5px solid #ddd; }
+.grid .checked { box-shadow: 0 0 3px #666; position: relative; z-index: 1; }
 .lv2 span { width: 50%; height: 50% }
 .lv3 span { width: 33.33%; height: 33.33% }
 .lv4 span { width: 25%; height: 25% }
