@@ -34,7 +34,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 			score: $('#J_score')
 			cdown: $('#J_cdown')
 			dialog: $('#J_dialog')
-			btnWrap: $('.btn-wrap')
+			btns: $('.btns')
 			dContent: $( '.content' )
 			dGameover: $( '.gameover' )
 			dPause: $( '.pause' )
@@ -47,11 +47,11 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		lvMap = colorConf.lvMap
 		this.App = App;
 
-		this.renderUI();
-		this.reset();						# 重置一些参数
-		inited or this.initEvent();
+		@renderUI();
+		@reset();						# 重置一些参数
+		inited or @initEvent();
 		inited = true
-		this.build();
+		@build();
 		return
 	renderUI: () ->
 		# 制定颜色网格大小
@@ -68,14 +68,14 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		$el.grid.on(clickType, 'span', $.proxy(self.selectColor, self))
 		$el.pause.on clickType, $.proxy(self.pause, self)
 		# 为dialog的按钮添加监听事件
-		$el.btnWrap.on clickType, 'a', () ->
-			if this.className.indexOf('btn-restart') isnt -1
+		$el.btns.on clickType, 'a', () ->
+			if this.className.indexOf('btn-restart') isnt -1 				# 重来，再来
 				self.restart()
 				return
-			else if this.className.indexOf('btn-resume') isnt -1
+			else if this.className.indexOf('btn-resume') isnt -1 			# 继续
 				self.resume()
 				return
-			else if this.className.indexOf('btn-toIndex') isnt -1
+			else if this.className.indexOf('btn-toIndex') isnt -1 			# 返回主界面
 				# 返回到游戏开始界面
 				$('.page').hide().eq(1).show();
 				return
@@ -94,7 +94,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		# 构建网格颜色块
 		@createMap()
 		# 然后开启游戏倒计时(确保只设置一次)
-		timerID = timerID or setInterval $.proxy( this.tick, this ), 1000
+		timerID = timerID or setInterval $.proxy( @tick, @ ), 1000
 		return
 	pause: () ->
 		pause = true
@@ -109,8 +109,8 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 	restart: () ->
 		clearTimer()			# 清除现有的定时器
 		pause = false
-		this.reset()			# 重置参数
-		this.build()			# 新的征程开始吧
+		@reset()			# 重置参数
+		@build()			# 新的征程开始吧
 		$el.dialog.hide()
 		return
 	reset: () ->
@@ -131,7 +131,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 			score += Math.round currMap / 2
 			block.className = 'checked'
 			# 判断是否可以进入下一局
-			this.nextTv() if finded is target
+			@nextTv() if finded is target
 		else
 			# 如果选中失败
 			currTime -= 1 
@@ -140,7 +140,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		lv += 1
 		# 有限制条件的奖励时间 1 或 2
 		currTime += Math.ceil Math.random() * 2 if currMap > 8 
-		this.build true
+		@build true
 		return
 	tick: () ->
 		# 更新时间，提醒时间，判断是否结束
@@ -153,7 +153,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 				$el.cdown.addClass 'warn'
 			else
 				$el.cdown.removeClass 'warn'
-			if currTime < 0 then this.gameOver() else $el.cdown.text currTime
+			if currTime < 0 then @gameOver() else $el.cdown.text currTime
 		return
 	createMap: () ->
 		# 读取当前的map, 构建颜色块
@@ -166,13 +166,13 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		$el.grid.attr( 'class', 'full grid lv' + currMap)
 			.html( mapHTML ).show();
 		# 渲染颜色块 待优化该逻辑
-		this.Color.init currMap, lv, $el.grid 
+		@Color.init currMap, lv, $el.grid 
 		return  
 	gameOver: () ->
 		# 取消现有定时器
 		clearTimer();
 		# 游戏的官封
-		textLv = this.Color.getTextLv lv
+		textLv = @Color.getTextLv lv
 		lvT = Conf.lv_txt
 		currLvT = lvT[textLv] or lvT[lvT.length - 1]
 		$el.dLvText.text 'Lv' + lv + currLvT

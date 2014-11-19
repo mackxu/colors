@@ -22,7 +22,7 @@ body {
 .page-subtitle { font-size: 16px; color: #FFA1A1;  }
 .btns { text-align: center; }
 .btns-start { position: absolute; bottom: 0; width: 100%; height: 30%; }
-.btn { outline: 0; text-decoration: none; display: inline-block; color: #DDD; }
+.btn { outline: 0; text-decoration: none; display: inline-block; color: #FFF; }
 .btn-primary { 
     width: 220px; height: 50px; line-height: 50px; margin: 10px 30px;
     letter-spacing: 1px; font-weight: bold; font-size: 20px;
@@ -31,6 +31,7 @@ body {
 
 .btn-wrap .btn-primary { float: left; width: 105px; margin: 30px 0; }
 .btn-wrap .btn-primary + .btn-primary { margin-left: 10px; }
+
 .btn-other { margin: 0; }
 .room-header { 
     font-size: 18px; line-height: 36px; text-align: center;
@@ -45,6 +46,8 @@ body {
     position: absolute; right: 10px;
     height: 36px; line-height: 36px; padding: 0 16px; font-size: 18px; background-color: #FCAD26;
 }
+.pause .btn-toIndex { margin: 0; }
+
 @media (orientation: landscape) {
     .room-header { bottom: 10px; left: 10px;  width: 80px; line-height: inherit; }
     .score { top: auto; bottom: 0; left: 0; }
