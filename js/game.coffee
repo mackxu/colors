@@ -123,8 +123,11 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		return
 	selectColor: (e) ->
 		block = e.target
-		if $.data(block, 'target') is true
+		# 解决错误 and block.className.indexOf('checked') is -1
+		# 解决双飞模式 点击两次相同的目标颜色块，也能通关的问题
+		if $.data(block, 'target') is true and block.className.indexOf('checked') is -1
 			finded += 1
+			# 分数策略不同模式也应该不同
 			score += Math.round currMap / 2
 			block.className = 'checked'
 			# 判断是否可以进入下一局
