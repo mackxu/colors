@@ -87,12 +87,12 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 	build: ( next ) ->
 		# 每一局都会执行
 		finded = 0
-		# 构建网格颜色块
-		this.createMap()
 		# 更新得分
 		$el.score.text score
 		# 设置界面的初始倒计时数
 		next or $el.cdown.text currTime
+		# 构建网格颜色块
+		@createMap()
 		# 然后开启游戏倒计时(确保只设置一次)
 		timerID = timerID or setInterval $.proxy( this.tick, this ), 1000
 		return
@@ -163,7 +163,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		$el.grid.attr( 'class', 'full grid lv' + currMap)
 			.html( mapHTML ).show();
 		# 渲染颜色块 待优化该逻辑
-		this.Color.init currMap, lv, $el.grid.find('span') 
+		this.Color.init currMap, lv, $el.grid 
 		return  
 	gameOver: () ->
 		# 取消现有定时器
