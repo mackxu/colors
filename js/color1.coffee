@@ -1,7 +1,7 @@
-define ['color'], (Color) ->
+define ['dist/color'], (Color) ->
 	Color1 = Object.create Color
 
-	Color1.render =  () ->
+	Color1.render = ->
 		# 根据lv的值，产生出目标颜色 
 		targetColor = @getColor()
 		lvColor = @getLvColor()

@@ -1,4 +1,4 @@
-define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
+define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 ) ->
 	# 游戏模式有两种: 普通和双飞
 	Colors = 
 		color1: color1
@@ -20,7 +20,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 	$el = null				# 所有元素
 	
 	# 定制私有方法
-	clearTimer = () ->
+	clearTimer = ->
 		clearInterval timerID
 		timerID = null
 		return
@@ -41,34 +41,37 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 			dLvText: $( '.level-text' )
 
 		# 根据type的值，获取对应的config和api
-		this.Color = Colors[type]
+		@Color = Colors[type]
 		colorConf = Conf[type]
 		target = colorConf.target
 		lvMap = colorConf.lvMap
-		this.App = App;
+		@App = App;
 
-		@renderUI();
+		@renderGrid();
 		@reset();						# 重置一些参数
 		inited or @initEvent();
 		inited = true
 		@build();
 		return
-	renderUI: () ->
+
+	renderGrid: ->
 		# 制定颜色网格大小
 		size = Math.min(window.innerWidth, window.innerHeight);
 		size = Math.min(size - 10, Conf.size);
 		$el.grid.width(size).height(size);
 		# 隐藏开始界面，显示游戏舞台
-		$el.room[0].style.display = 'block'
+		$el.room.show()
 		return
-	initEvent: () ->
+
+	initEvent: ->
+		# 为页面元素绑定事件
 		self = this
 		clickType = self.App.clickType
 		# 为颜色块添加监听事件
 		$el.grid.on(clickType, 'span', $.proxy(self.selectColor, self))
 		$el.pause.on clickType, $.proxy(self.pause, self)
 		# 为dialog的按钮添加监听事件
-		$el.btns.on clickType, 'a', () ->
+		$el.btns.on clickType, 'a', ->
 			if this.className.indexOf('btn-restart') isnt -1 				# 重来，再来
 				self.restart()
 				return
@@ -77,13 +80,13 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 				return
 			else if this.className.indexOf('btn-toIndex') isnt -1 			# 返回主界面
 				# 返回到游戏开始界面
-				$('.page').hide().eq(1).show();
+				$('.page').hide().filter('.page-index').show();
 				return
 				
 		# 为颜色网格添加适应布局
 		$(window).on 'resize', $.proxy(self.renderUI, self)
-
 		return
+
 	build: ( next ) ->
 		# 每一局都会执行
 		finded = 0
@@ -96,24 +99,28 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		# 然后开启游戏倒计时(确保只设置一次)
 		timerID = timerID or setInterval $.proxy( @tick, @ ), 1000
 		return
-	pause: () ->
+
+	pause: ->
 		pause = true
 		$el.dialog.show()
 		$el.dContent.hide()
 		$el.dPause.show()
 		return
-	resume: () ->
+
+	resume: ->
 		pause = false
 		$el.dialog.hide()
 		return
-	restart: () ->
+
+	restart: ->
 		clearTimer()			# 清除现有的定时器
 		pause = false
-		@reset()			# 重置参数
-		@build()			# 新的征程开始吧
+		@reset()				# 重置参数
+		@build()				# 新的征程开始吧
 		$el.dialog.hide()
 		return
-	reset: () ->
+
+	reset: ->
 		# 重置倒计时数
 		currTime = colorConf.allTime
 		# 当前得分
@@ -121,6 +128,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		# 当前的局数
 		lv = 0
 		return
+
 	selectColor: (e) ->
 		block = e.target
 		# 解决错误 and block.className.indexOf('checked') is -1
@@ -136,13 +144,15 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 			# 如果选中失败
 			currTime -= 1 
 		return
-	nextTv: () ->
+
+	nextTv: ->
 		lv += 1
 		# 有限制条件的奖励时间 1 或 2
 		currTime += Math.ceil Math.random() * 2 if currMap > 8 
 		@build true
 		return
-	tick: () ->
+
+	tick: ->
 		# 更新时间，提醒时间，判断是否结束
 		if pause is true
 			return				# 游戏暂停, 停止更新倒计时
@@ -155,7 +165,8 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 				$el.cdown.removeClass 'warn'
 			if currTime < 0 then @gameOver() else $el.cdown.text currTime
 		return
-	createMap: () ->
+
+	createMap: ->
 		# 读取当前的map, 构建颜色块
 		currMap = lvMap[lv] or lvMap[lvMap.length - 1]
 		mapHTML = ('<span></span>' for i in [ 0 ... currMap * currMap ]).join('')
@@ -168,7 +179,8 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		# 渲染颜色块 待优化该逻辑
 		@Color.init currMap, lv, $el.grid 
 		return  
-	gameOver: () ->
+
+	gameOver: ->
 		# 取消现有定时器
 		clearTimer();
 		# 游戏的官封
@@ -176,7 +188,7 @@ define [ 'config', 'color1', 'color2' ], ( Conf, color1, color2 ) ->
 		lvT = Conf.lv_txt
 		currLvT = lvT[textLv] or lvT[lvT.length - 1]
 		$el.dLvText.text 'Lv' + lv + currLvT
-		$el.grid.fadeOut 1000, () ->
+		$el.grid.fadeOut 1000, ->
 			$el.dialog.show()
 			$el.dContent.hide()
 			$el.dGameover.show()

@@ -1,11 +1,11 @@
-define ['color'], ( Color ) ->
+define ['dist/color'], ( Color ) ->
 	# 颜色块会旋转90度
 	gridRotate = 'grid-rotate'
 
 	# 双飞模式的API
 	Color2 = Object.create Color
 
-	Color2.render =  () ->
+	Color2.render = ->
 		colorsNum = @$colors.length				# 总颜色块数
 		if Math.random() < 0.5 then @$grid.addClass( gridRotate ) else @$grid.removeClass( gridRotate )
 		# 根据lv的值，产生出目标颜色 

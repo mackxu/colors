@@ -1,6 +1,6 @@
 
 require.config({
-	baseUrl: 'js',
+	baseUrl: './js',
 	paths: {
 		jquery: 'libs/jquery-2.1.1',
 		underscore: 'libs/underscore'
@@ -10,7 +10,7 @@ require.config({
 	}
 });
 
-require(['jquery', 'app'], function($, App) {
+require(['jquery', 'dist/app'], function($, App) {
 	$(function() {
 		App.init();
 	});
