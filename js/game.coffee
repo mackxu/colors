@@ -18,6 +18,7 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 	inited = false			# 用于模式切换
 
 	$el = null				# 所有元素
+	absent = -1 			# 字符串查找类选择器是否存在
 	
 	# 定制私有方法
 	clearTimer = ->
@@ -25,7 +26,7 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 		timerID = null
 		return
 
-	# 公开的方法
+	# Game的共有方法
 	init: ( type, App ) ->
 		$el = 
 			room: $('#J_room')
@@ -43,15 +44,16 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 		# 根据type的值，获取对应的config和api
 		@Color = Colors[type]
 		colorConf = Conf[type]
+
 		target = colorConf.target
 		lvMap = colorConf.lvMap
 		@App = App;
-
+		# 做一些准备工作，并开启游戏
 		@renderGrid();
-		@reset();						# 重置一些参数
-		inited or @initEvent();
+		@resetGameData();						# 重置一些参数
+		inited or @initEvent()
 		inited = true
-		@build();
+		@buildGame()
 		return
 
 	renderGrid: ->
@@ -72,13 +74,15 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 		$el.pause.on clickType, $.proxy(self.pause, self)
 		# 为dialog的按钮添加监听事件
 		$el.btns.on clickType, 'a', ->
-			if this.className.indexOf('btn-restart') isnt -1 				# 重来，再来
+			className = this.className
+			# absent的值为－1
+			if className.indexOf('btn-restart') isnt absent 				# 重来，再来
 				self.restart()
 				return
-			else if this.className.indexOf('btn-resume') isnt -1 			# 继续
+			else if className.indexOf('btn-resume') isnt absent 			# 继续
 				self.resume()
 				return
-			else if this.className.indexOf('btn-toIndex') isnt -1 			# 返回主界面
+			else if className.indexOf('btn-toIndex') isnt absent 			# 返回主界面
 				# 返回到游戏开始界面
 				$('.page').hide().filter('.page-index').show();
 				return
@@ -87,7 +91,7 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 		$(window).on 'resize', $.proxy(self.renderGrid, self)
 		return
 
-	build: ( next ) ->
+	buildGame: ( next ) ->
 		# 每一局都会执行
 		finded = 0
 		# 更新得分, 用于[init/nextLv/restart]
@@ -115,12 +119,12 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 	restart: ->
 		clearTimer()			# 清除现有的定时器
 		pause = false
-		@reset()				# 重置参数
-		@build()				# 新的征程开始吧
+		@resetGameData()		# 重置参数
+		@buildGame()				# 新的征程开始吧
 		$el.dialog.hide()
 		return
 
-	reset: ->
+	resetGameData: ->
 		# 重置倒计时数
 		currTime = colorConf.allTime
 		# 当前得分
@@ -148,7 +152,7 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 		lv += 1
 		# 有限制条件的奖励时间 1 或 2
 		currTime += Math.ceil Math.random() * 2 if currMap > 8 
-		@build true
+		@buildGame true
 		return
 
 	tick: ->
@@ -175,7 +179,7 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 		# 由于游戏over时会隐藏grid，所以后面需要添加show()
 		$el.grid.attr( 'class', 'full grid lv' + currMap)
 			.html( mapHTML ).show();
-		# 渲染颜色块 待优化该逻辑
+		# 执行核心逻辑，渲染颜色块
 		@Color.init currMap, lv, $el.grid 
 		return  
 
