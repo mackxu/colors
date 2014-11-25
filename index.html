@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <title>How Strong Is Your Eyesight</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/color.css">
+  <link rel="dns-prefetch" href="http://qncolors.qiniudn.com">
+  <link rel="stylesheet" href="http://qncolors.qiniudn.com/css/color.css">
 </head>
 <body>
 <div class="container">
@@ -59,6 +60,21 @@
     <!-- // Dialog -->
 </div>
   
-<script src="js/require.js" data-main="js/main"></script>
+<script src="http://qncolors.qiniudn.com/js/require.js"></script>
+<script>
+// 配置requireJS, 开始游戏 
+require.config({
+    baseUrl: 'http://qncolors.qiniudn.com/js',
+    paths: {
+        jquery: 'libs/jquery-2.1.1',
+    }
+});
+
+require(['jquery', 'dist/app'], function($, App) {
+    $(function() {
+        App.init();
+    });
+});
+</script>
 </body>
 </html>
