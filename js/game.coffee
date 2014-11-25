@@ -9,7 +9,7 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 	lv = 0 					# 游戏局数
 	lvMap = null			# 游戏的所有地图 每个模式不同
 	colorConf = null
-	currMap = 0				# 当前使用的地图行数 [ 多处计算用到该值 ]
+	currMap = 0				# 当前使用的地图的大小 [ 多处计算用到该值 ]
 	finded = 0				# 本局找到的目标的颜色个数
 	target = 0				# 该模式的目标颜色个数
 	score = 0				# 总得分
@@ -65,10 +65,10 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 
 	initEvent: ->
 		# 为页面元素绑定事件
-		self = this
+		self = @
 		clickType = self.App.clickType
 		# 为颜色块添加监听事件
-		$el.grid.on(clickType, 'span', $.proxy(self.selectColor, self))
+		$el.grid.on(clickType, 'span', $.proxy(self.selectColorHandle, self))
 		$el.pause.on clickType, $.proxy(self.pause, self)
 		# 为dialog的按钮添加监听事件
 		$el.btns.on clickType, 'a', ->
@@ -84,13 +84,13 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 				return
 				
 		# 为颜色网格添加适应布局
-		$(window).on 'resize', $.proxy(self.renderUI, self)
+		$(window).on 'resize', $.proxy(self.renderGrid, self)
 		return
 
 	build: ( next ) ->
 		# 每一局都会执行
 		finded = 0
-		# 更新得分
+		# 更新得分, 用于[init/nextLv/restart]
 		$el.score.text score
 		# 设置界面的初始倒计时数
 		next or $el.cdown.text currTime
@@ -129,17 +129,16 @@ define [ 'dist/config', 'dist/color1', 'dist/color2' ], ( Conf, color1, color2 )
 		lv = 0
 		return
 
-	selectColor: (e) ->
+	selectColorHandle: (e) ->
 		block = e.target
-		# 解决错误 and block.className.indexOf('checked') is -1
-		# 解决双飞模式 点击两次相同的目标颜色块，也能通关的问题
+		# 是目标元素且没有被选中的(后者双飞模式会用到)
 		if $.data(block, 'target') is true and block.className.indexOf('checked') is -1
 			finded += 1
 			# 分数策略不同模式也应该不同
 			score += Math.round currMap / 2
-			block.className = 'checked'
-			# 判断是否可以进入下一局
-			@nextTv() if finded is target
+			
+			block.className = 'checked'				# 高亮选中的目标色块
+			@nextTv() if finded is target			# 判断是否可以进入下一局
 		else
 			# 如果选中失败
 			currTime -= 1 

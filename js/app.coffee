@@ -1,6 +1,7 @@
 define ['dist/game'], (Game)-> 
 
 	$el = null
+	# 移动设备使用touchend替代点击事件
 	clickType = if ('ontouchstart' of window) then 'touchend' else 'click'
 
 	# App的公有方法 

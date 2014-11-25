@@ -7,9 +7,9 @@ define ->
     
     # 公有方法
     ###
-    lvMap: 颜色块地图
-    lv: 当前的局数
-    $grid: 颜色块的容器DOM
+     * lvMap: 颜色块地图
+     * lv: 当前的局数
+     * $grid: 颜色块的容器DOM
     ###
     init: (@lvMap, @lv, @$grid) ->
         # 所有颜色块结构
